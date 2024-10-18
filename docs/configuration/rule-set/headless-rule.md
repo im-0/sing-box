@@ -1,3 +1,11 @@
+---
+icon: material/alert-decagram
+---
+
+!!! quote "Changes in sing-box X.Y.TODO"
+
+    :material-plus: [domain_strategy](#domain_strategy)
+
 ### Structure
 
 !!! question "Since sing-box 1.8.0"
@@ -6,6 +14,7 @@
 {
   "rules": [
     {
+      "domain_strategy": "prefer_ipv6",
       "query_type": [
         "A",
         "HTTPS",
@@ -94,6 +103,23 @@
     (`port` || `port_range`) &&  
     (`source_port` || `source_port_range`) &&  
     `other fields`
+
+#### domain_strategy
+
+One of `prefer_ipv4` `prefer_ipv6` `ipv4_only` `ipv6_only`.
+
+If set, the requested domain name will be resolved to IP before matching
+with current rule.
+
+Rule processing stops and default outbound is used when name resolution
+fails.
+
+It is recommended to set `domain_strategy` in every rule that requires
+IP addresses to match. Name resolution is performed on each
+such rule unless value of `domain_strategy` is equal to previous one.
+
+Usage within DNS rule context is not supported and may not work as
+expected.
 
 #### query_type
 
