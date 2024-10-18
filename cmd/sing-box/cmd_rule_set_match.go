@@ -85,7 +85,7 @@ func ruleSetMatch(sourcePath string, domain string) error {
 	}
 	for i, ruleOptions := range plainRuleSet.Rules {
 		var currentRule adapter.HeadlessRule
-		currentRule, err = route.NewHeadlessRule(nil, ruleOptions)
+		currentRule, err = route.NewHeadlessRule(nil, nil, ruleOptions)
 		if err != nil {
 			return E.Cause(err, "parse rule_set.rules.[", i, "]")
 		}

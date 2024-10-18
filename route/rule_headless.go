@@ -3,22 +3,23 @@ package route
 import (
 	"github.com/sagernet/sing-box/adapter"
 	C "github.com/sagernet/sing-box/constant"
+	"github.com/sagernet/sing-box/log"
 	"github.com/sagernet/sing-box/option"
 	E "github.com/sagernet/sing/common/exceptions"
 )
 
-func NewHeadlessRule(router adapter.Router, options option.HeadlessRule) (adapter.HeadlessRule, error) {
+func NewHeadlessRule(router adapter.Router, logger log.ContextLogger, options option.HeadlessRule) (adapter.HeadlessRule, error) {
 	switch options.Type {
 	case "", C.RuleTypeDefault:
 		if !options.DefaultOptions.IsValid() {
 			return nil, E.New("missing conditions")
 		}
-		return NewDefaultHeadlessRule(router, options.DefaultOptions)
+		return NewDefaultHeadlessRule(router, logger, options.DefaultOptions)
 	case C.RuleTypeLogical:
 		if !options.LogicalOptions.IsValid() {
 			return nil, E.New("missing conditions")
 		}
-		return NewLogicalHeadlessRule(router, options.LogicalOptions)
+		return NewLogicalHeadlessRule(router, logger, options.LogicalOptions)
 	default:
 		return nil, E.New("unknown rule type: ", options.Type)
 	}
@@ -30,7 +31,7 @@ type DefaultHeadlessRule struct {
 	abstractDefaultRule
 }
 
-func NewDefaultHeadlessRule(router adapter.Router, options option.DefaultHeadlessRule) (*DefaultHeadlessRule, error) {
+func NewDefaultHeadlessRule(router adapter.Router, logger log.ContextLogger, options option.DefaultHeadlessRule) (*DefaultHeadlessRule, error) {
 	rule := &DefaultHeadlessRule{
 		abstractDefaultRule{
 			invert: options.Invert,
@@ -168,7 +169,7 @@ type LogicalHeadlessRule struct {
 	abstractLogicalRule
 }
 
-func NewLogicalHeadlessRule(router adapter.Router, options option.LogicalHeadlessRule) (*LogicalHeadlessRule, error) {
+func NewLogicalHeadlessRule(router adapter.Router, logger log.ContextLogger, options option.LogicalHeadlessRule) (*LogicalHeadlessRule, error) {
 	r := &LogicalHeadlessRule{
 		abstractLogicalRule{
 			rules:  make([]adapter.HeadlessRule, len(options.Rules)),
@@ -184,7 +185,7 @@ func NewLogicalHeadlessRule(router adapter.Router, options option.LogicalHeadles
 		return nil, E.New("unknown logical mode: ", options.Mode)
 	}
 	for i, subRule := range options.Rules {
-		rule, err := NewHeadlessRule(router, subRule)
+		rule, err := NewHeadlessRule(router, logger, subRule)
 		if err != nil {
 			return nil, E.Cause(err, "sub rule[", i, "]")
 		}

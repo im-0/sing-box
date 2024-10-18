@@ -27,7 +27,7 @@ var _ adapter.RuleSet = (*LocalRuleSet)(nil)
 
 type LocalRuleSet struct {
 	router     adapter.Router
-	logger     logger.Logger
+	logger     logger.ContextLogger
 	tag        string
 	rules      []adapter.HeadlessRule
 	metadata   adapter.RuleSetMetadata
@@ -36,7 +36,7 @@ type LocalRuleSet struct {
 	refs       atomic.Int32
 }
 
-func NewLocalRuleSet(ctx context.Context, router adapter.Router, logger logger.Logger, options option.RuleSet) (*LocalRuleSet, error) {
+func NewLocalRuleSet(ctx context.Context, router adapter.Router, logger logger.ContextLogger, options option.RuleSet) (*LocalRuleSet, error) {
 	ruleSet := &LocalRuleSet{
 		router:     router,
 		logger:     logger,
@@ -130,7 +130,7 @@ func (s *LocalRuleSet) reloadRules(headlessRules []option.HeadlessRule) error {
 	rules := make([]adapter.HeadlessRule, len(headlessRules))
 	var err error
 	for i, ruleOptions := range headlessRules {
-		rules[i], err = NewHeadlessRule(s.router, ruleOptions)
+		rules[i], err = NewHeadlessRule(s.router, s.logger, ruleOptions)
 		if err != nil {
 			return E.Cause(err, "parse rule_set.rules.[", i, "]")
 		}

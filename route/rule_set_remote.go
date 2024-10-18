@@ -182,7 +182,7 @@ func (s *RemoteRuleSet) loadBytes(content []byte) error {
 	}
 	rules := make([]adapter.HeadlessRule, len(plainRuleSet.Rules))
 	for i, ruleOptions := range plainRuleSet.Rules {
-		rules[i], err = NewHeadlessRule(s.router, ruleOptions)
+		rules[i], err = NewHeadlessRule(s.router, s.logger, ruleOptions)
 		if err != nil {
 			return E.Cause(err, "parse rule_set.rules.[", i, "]")
 		}
