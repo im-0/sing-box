@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -40,11 +41,11 @@ func (r *RuleSetItem) Start() error {
 	return nil
 }
 
-func (r *RuleSetItem) Match(metadata *adapter.InboundContext) bool {
+func (r *RuleSetItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	metadata.IPCIDRMatchSource = r.ipCidrMatchSource
 	metadata.IPCIDRAcceptEmpty = r.ipCidrAcceptEmpty
 	for _, ruleSet := range r.setList {
-		if ruleSet.Match(metadata) {
+		if ruleSet.Match(ctx, metadata) {
 			return true
 		}
 	}

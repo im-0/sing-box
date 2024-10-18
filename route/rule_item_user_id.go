@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -25,7 +26,7 @@ func NewUserIDItem(userIdList []int32) *UserIdItem {
 	return rule
 }
 
-func (r *UserIdItem) Match(metadata *adapter.InboundContext) bool {
+func (r *UserIdItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	if metadata.ProcessInfo == nil || metadata.ProcessInfo.UserId == -1 {
 		return false
 	}

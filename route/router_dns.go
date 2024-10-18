@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/sagernet/sing-box/adapter"
-	"github.com/sagernet/sing-dns"
+	dns "github.com/sagernet/sing-dns"
 	"github.com/sagernet/sing/common/cache"
 	E "github.com/sagernet/sing/common/exceptions"
 	F "github.com/sagernet/sing/common/format"
@@ -51,7 +51,7 @@ func (r *Router) matchDNS(ctx context.Context, allowFakeIP bool, index int, isAd
 				continue
 			}
 			metadata.ResetRuleCache()
-			if rule.Match(metadata) {
+			if rule.Match(ctx, metadata) {
 				detour := rule.Outbound()
 				transport, loaded := r.transportMap[detour]
 				if !loaded {
@@ -137,7 +137,7 @@ func (r *Router) Exchange(ctx context.Context, message *mDNS.Msg) (*mDNS.Msg, er
 						return false
 					}
 					metadata.DestinationAddresses = addresses
-					return rule.MatchAddressLimit(metadata)
+					return rule.MatchAddressLimit(ctx, metadata)
 				})
 			} else {
 				addressLimit = false
@@ -219,7 +219,7 @@ func (r *Router) Lookup(ctx context.Context, domain string, strategy dns.DomainS
 			addressLimit = true
 			responseAddrs, err = r.dnsClient.LookupWithResponseCheck(dnsCtx, transport, domain, strategy, func(responseAddrs []netip.Addr) bool {
 				metadata.DestinationAddresses = responseAddrs
-				return rule.MatchAddressLimit(metadata)
+				return rule.MatchAddressLimit(ctx, metadata)
 			})
 		} else {
 			addressLimit = false

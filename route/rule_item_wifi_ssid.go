@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -27,7 +28,7 @@ func NewWIFISSIDItem(router adapter.Router, ssidList []string) *WIFISSIDItem {
 	}
 }
 
-func (r *WIFISSIDItem) Match(metadata *adapter.InboundContext) bool {
+func (r *WIFISSIDItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	return r.ssidMap[r.router.WIFIState().SSID]
 }
 

@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"regexp"
 	"strings"
 
@@ -37,7 +38,7 @@ func NewProcessPathRegexItem(expressions []string) (*ProcessPathRegexItem, error
 	return &ProcessPathRegexItem{matchers, description}, nil
 }
 
-func (r *ProcessPathRegexItem) Match(metadata *adapter.InboundContext) bool {
+func (r *ProcessPathRegexItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	if metadata.ProcessInfo == nil || metadata.ProcessInfo.ProcessPath == "" {
 		return false
 	}

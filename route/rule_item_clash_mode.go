@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -20,7 +21,7 @@ func NewClashModeItem(router adapter.Router, mode string) *ClashModeItem {
 	}
 }
 
-func (r *ClashModeItem) Match(metadata *adapter.InboundContext) bool {
+func (r *ClashModeItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	clashServer := r.router.ClashServer()
 	if clashServer == nil {
 		return false

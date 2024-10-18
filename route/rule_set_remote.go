@@ -312,9 +312,9 @@ func (s *RemoteRuleSet) Close() error {
 	return nil
 }
 
-func (s *RemoteRuleSet) Match(metadata *adapter.InboundContext) bool {
+func (s *RemoteRuleSet) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	for _, rule := range s.rules {
-		if rule.Match(metadata) {
+		if rule.Match(ctx, metadata) {
 			return true
 		}
 	}

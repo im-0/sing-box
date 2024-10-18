@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"io"
 	"strings"
 
@@ -63,7 +64,7 @@ func (r *abstractDefaultRule) UpdateGeosite() error {
 	return nil
 }
 
-func (r *abstractDefaultRule) Match(metadata *adapter.InboundContext) bool {
+func (r *abstractDefaultRule) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	if len(r.allItems) == 0 {
 		return true
 	}
@@ -71,7 +72,7 @@ func (r *abstractDefaultRule) Match(metadata *adapter.InboundContext) bool {
 	if len(r.sourceAddressItems) > 0 && !metadata.SourceAddressMatch {
 		metadata.DidMatch = true
 		for _, item := range r.sourceAddressItems {
-			if item.Match(metadata) {
+			if item.Match(ctx, metadata) {
 				metadata.SourceAddressMatch = true
 				break
 			}
@@ -81,7 +82,7 @@ func (r *abstractDefaultRule) Match(metadata *adapter.InboundContext) bool {
 	if len(r.sourcePortItems) > 0 && !metadata.SourcePortMatch {
 		metadata.DidMatch = true
 		for _, item := range r.sourcePortItems {
-			if item.Match(metadata) {
+			if item.Match(ctx, metadata) {
 				metadata.SourcePortMatch = true
 				break
 			}
@@ -91,7 +92,7 @@ func (r *abstractDefaultRule) Match(metadata *adapter.InboundContext) bool {
 	if len(r.destinationAddressItems) > 0 && !metadata.DestinationAddressMatch {
 		metadata.DidMatch = true
 		for _, item := range r.destinationAddressItems {
-			if item.Match(metadata) {
+			if item.Match(ctx, metadata) {
 				metadata.DestinationAddressMatch = true
 				break
 			}
@@ -101,7 +102,7 @@ func (r *abstractDefaultRule) Match(metadata *adapter.InboundContext) bool {
 	if !metadata.IgnoreDestinationIPCIDRMatch && len(r.destinationIPCIDRItems) > 0 && !metadata.DestinationAddressMatch {
 		metadata.DidMatch = true
 		for _, item := range r.destinationIPCIDRItems {
-			if item.Match(metadata) {
+			if item.Match(ctx, metadata) {
 				metadata.DestinationAddressMatch = true
 				break
 			}
@@ -111,7 +112,7 @@ func (r *abstractDefaultRule) Match(metadata *adapter.InboundContext) bool {
 	if len(r.destinationPortItems) > 0 && !metadata.DestinationPortMatch {
 		metadata.DidMatch = true
 		for _, item := range r.destinationPortItems {
-			if item.Match(metadata) {
+			if item.Match(ctx, metadata) {
 				metadata.DestinationPortMatch = true
 				break
 			}
@@ -122,7 +123,7 @@ func (r *abstractDefaultRule) Match(metadata *adapter.InboundContext) bool {
 		if _, isRuleSet := item.(*RuleSetItem); !isRuleSet {
 			metadata.DidMatch = true
 		}
-		if !item.Match(metadata) {
+		if !item.Match(ctx, metadata) {
 			return r.invert
 		}
 	}
@@ -217,16 +218,16 @@ func (r *abstractLogicalRule) Close() error {
 	return nil
 }
 
-func (r *abstractLogicalRule) Match(metadata *adapter.InboundContext) bool {
+func (r *abstractLogicalRule) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	if r.mode == C.LogicalTypeAnd {
 		return common.All(r.rules, func(it adapter.HeadlessRule) bool {
 			metadata.ResetRuleCache()
-			return it.Match(metadata)
+			return it.Match(ctx, metadata)
 		}) != r.invert
 	} else {
 		return common.Any(r.rules, func(it adapter.HeadlessRule) bool {
 			metadata.ResetRuleCache()
-			return it.Match(metadata)
+			return it.Match(ctx, metadata)
 		}) != r.invert
 	}
 }

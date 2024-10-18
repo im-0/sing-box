@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -25,7 +26,7 @@ func NewProtocolItem(protocols []string) *ProtocolItem {
 	}
 }
 
-func (r *ProtocolItem) Match(metadata *adapter.InboundContext) bool {
+func (r *ProtocolItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	return r.protocolMap[metadata.Protocol]
 }
 

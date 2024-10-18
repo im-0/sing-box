@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"net/netip"
 	"strings"
 
@@ -72,7 +73,7 @@ func NewRawIPCIDRItem(isSource bool, ipSet *netipx.IPSet) *IPCIDRItem {
 	}
 }
 
-func (r *IPCIDRItem) Match(metadata *adapter.InboundContext) bool {
+func (r *IPCIDRItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	if r.isSource || metadata.IPCIDRMatchSource {
 		return r.ipSet.Contains(metadata.Source.Addr)
 	}

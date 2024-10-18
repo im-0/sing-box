@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"net/netip"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -17,7 +18,7 @@ func NewIPIsPrivateItem(isSource bool) *IPIsPrivateItem {
 	return &IPIsPrivateItem{isSource}
 }
 
-func (r *IPIsPrivateItem) Match(metadata *adapter.InboundContext) bool {
+func (r *IPIsPrivateItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	var destination netip.Addr
 	if r.isSource {
 		destination = metadata.Source.Addr

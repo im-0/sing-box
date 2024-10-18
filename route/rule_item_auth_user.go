@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -25,7 +26,7 @@ func NewAuthUserItem(users []string) *AuthUserItem {
 	}
 }
 
-func (r *AuthUserItem) Match(metadata *adapter.InboundContext) bool {
+func (r *AuthUserItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	return r.userMap[metadata.User]
 }
 

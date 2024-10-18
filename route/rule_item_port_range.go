@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strconv"
 	"strings"
 
@@ -55,7 +56,7 @@ func NewPortRangeItem(isSource bool, rangeList []string) (*PortRangeItem, error)
 	}, nil
 }
 
-func (r *PortRangeItem) Match(metadata *adapter.InboundContext) bool {
+func (r *PortRangeItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	var port uint16
 	if r.isSource {
 		port = metadata.Source.Port

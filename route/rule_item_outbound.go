@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -27,7 +28,7 @@ func NewOutboundRule(outbounds []string) *OutboundItem {
 	return rule
 }
 
-func (r *OutboundItem) Match(metadata *adapter.InboundContext) bool {
+func (r *OutboundItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	if r.matchAny && metadata.Outbound != "" {
 		return true
 	}

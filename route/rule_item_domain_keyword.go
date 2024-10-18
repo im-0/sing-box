@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -16,7 +17,7 @@ func NewDomainKeywordItem(keywords []string) *DomainKeywordItem {
 	return &DomainKeywordItem{keywords}
 }
 
-func (r *DomainKeywordItem) Match(metadata *adapter.InboundContext) bool {
+func (r *DomainKeywordItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	var domainHost string
 	if metadata.Domain != "" {
 		domainHost = metadata.Domain

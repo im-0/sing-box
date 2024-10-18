@@ -1,6 +1,7 @@
 package adguard
 
 import (
+	"context"
 	"strings"
 	"testing"
 
@@ -65,14 +66,16 @@ example.arpa
 		"sing-box.sagernet.org",
 	}
 	for _, domain := range matchDomain {
-		require.True(t, rule.Match(&adapter.InboundContext{
+		metadata := adapter.InboundContext{
 			Domain: domain,
-		}), domain)
+		}
+		require.True(t, rule.Match(adapter.WithContext(context.Background(), &metadata), &metadata), domain)
 	}
 	for _, domain := range notMatchDomain {
-		require.False(t, rule.Match(&adapter.InboundContext{
+		metadata := adapter.InboundContext{
 			Domain: domain,
-		}), domain)
+		}
+		require.False(t, rule.Match(adapter.WithContext(context.Background(), &metadata), &metadata), domain)
 	}
 }
 
@@ -96,14 +99,16 @@ func TestHosts(t *testing.T) {
 		"localhost",
 	}
 	for _, domain := range matchDomain {
-		require.True(t, rule.Match(&adapter.InboundContext{
+		metadata := adapter.InboundContext{
 			Domain: domain,
-		}), domain)
+		}
+		require.True(t, rule.Match(adapter.WithContext(context.Background(), &metadata), &metadata), domain)
 	}
 	for _, domain := range notMatchDomain {
-		require.False(t, rule.Match(&adapter.InboundContext{
+		metadata := adapter.InboundContext{
 			Domain: domain,
-		}), domain)
+		}
+		require.False(t, rule.Match(adapter.WithContext(context.Background(), &metadata), &metadata), domain)
 	}
 }
 
@@ -128,13 +133,15 @@ www.example.org
 		"example.org",
 	}
 	for _, domain := range matchDomain {
-		require.True(t, rule.Match(&adapter.InboundContext{
+		metadata := adapter.InboundContext{
 			Domain: domain,
-		}), domain)
+		}
+		require.True(t, rule.Match(adapter.WithContext(context.Background(), &metadata), &metadata), domain)
 	}
 	for _, domain := range notMatchDomain {
-		require.False(t, rule.Match(&adapter.InboundContext{
+		metadata := adapter.InboundContext{
 			Domain: domain,
-		}), domain)
+		}
+		require.False(t, rule.Match(adapter.WithContext(context.Background(), &metadata), &metadata), domain)
 	}
 }

@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"net/netip"
 	"strings"
 
@@ -33,7 +34,7 @@ func NewGeoIPItem(router adapter.Router, logger log.ContextLogger, isSource bool
 	}
 }
 
-func (r *GeoIPItem) Match(metadata *adapter.InboundContext) bool {
+func (r *GeoIPItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	var geoipCode string
 	if r.isSource && metadata.SourceGeoIPCode != "" {
 		geoipCode = metadata.SourceGeoIPCode

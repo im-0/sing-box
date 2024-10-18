@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -38,9 +39,9 @@ func (r *GeositeItem) Update() error {
 	return nil
 }
 
-func (r *GeositeItem) Match(metadata *adapter.InboundContext) bool {
+func (r *GeositeItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	for _, matcher := range r.matchers {
-		if matcher.Match(metadata) {
+		if matcher.Match(ctx, metadata) {
 			return true
 		}
 	}

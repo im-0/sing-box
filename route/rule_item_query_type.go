@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -28,7 +29,7 @@ func NewQueryTypeItem(typeList []option.DNSQueryType) *QueryTypeItem {
 	return rule
 }
 
-func (r *QueryTypeItem) Match(metadata *adapter.InboundContext) bool {
+func (r *QueryTypeItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	if metadata.QueryType == 0 {
 		return false
 	}

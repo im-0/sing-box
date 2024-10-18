@@ -6,8 +6,8 @@ import (
 	"net/netip"
 
 	"github.com/sagernet/sing-box/common/geoip"
-	"github.com/sagernet/sing-dns"
-	"github.com/sagernet/sing-tun"
+	dns "github.com/sagernet/sing-dns"
+	tun "github.com/sagernet/sing-tun"
 	"github.com/sagernet/sing/common/control"
 	N "github.com/sagernet/sing/common/network"
 	"github.com/sagernet/sing/common/x/list"
@@ -75,7 +75,7 @@ func RouterFromContext(ctx context.Context) Router {
 }
 
 type HeadlessRule interface {
-	Match(metadata *InboundContext) bool
+	Match(ctx context.Context, metadata *InboundContext) bool
 	String() string
 }
 
@@ -93,7 +93,7 @@ type DNSRule interface {
 	RewriteTTL() *uint32
 	ClientSubnet() *netip.Prefix
 	WithAddressLimit() bool
-	MatchAddressLimit(metadata *InboundContext) bool
+	MatchAddressLimit(ctx context.Context, metadata *InboundContext) bool
 }
 
 type RuleSet interface {

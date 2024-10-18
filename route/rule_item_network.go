@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -25,7 +26,7 @@ func NewNetworkItem(networks []string) *NetworkItem {
 	}
 }
 
-func (r *NetworkItem) Match(metadata *adapter.InboundContext) bool {
+func (r *NetworkItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	return r.networkMap[metadata.Network]
 }
 

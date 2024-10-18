@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -25,7 +26,7 @@ func NewClientItem(clients []string) *ClientItem {
 	}
 }
 
-func (r *ClientItem) Match(metadata *adapter.InboundContext) bool {
+func (r *ClientItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	return r.clientMap[metadata.Client]
 }
 

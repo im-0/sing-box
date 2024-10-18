@@ -1,6 +1,8 @@
 package route
 
 import (
+	"context"
+
 	"github.com/sagernet/sing-box/adapter"
 )
 
@@ -14,7 +16,7 @@ func NewIPVersionItem(isIPv6 bool) *IPVersionItem {
 	return &IPVersionItem{isIPv6}
 }
 
-func (r *IPVersionItem) Match(metadata *adapter.InboundContext) bool {
+func (r *IPVersionItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	return metadata.IPVersion != 0 && metadata.IPVersion == 6 == r.isIPv6 ||
 		metadata.Destination.IsIP() && metadata.Destination.IsIPv6() == r.isIPv6
 }

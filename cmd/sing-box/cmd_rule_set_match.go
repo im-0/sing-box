@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"io"
 	"os"
 
@@ -88,7 +89,7 @@ func ruleSetMatch(sourcePath string, domain string) error {
 		if err != nil {
 			return E.Cause(err, "parse rule_set.rules.[", i, "]")
 		}
-		if currentRule.Match(&metadata) {
+		if currentRule.Match(adapter.WithContext(context.Background(), &metadata), &metadata) {
 			println(F.ToString("match rules.[", i, "]: ", currentRule))
 		}
 	}

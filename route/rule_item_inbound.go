@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -22,7 +23,7 @@ func NewInboundRule(inbounds []string) *InboundItem {
 	return rule
 }
 
-func (r *InboundItem) Match(metadata *adapter.InboundContext) bool {
+func (r *InboundItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	return r.inboundMap[metadata.Inbound]
 }
 

@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"path/filepath"
 	"strings"
 
@@ -25,7 +26,7 @@ func NewProcessItem(processNameList []string) *ProcessItem {
 	return rule
 }
 
-func (r *ProcessItem) Match(metadata *adapter.InboundContext) bool {
+func (r *ProcessItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	if metadata.ProcessInfo == nil || metadata.ProcessInfo.ProcessPath == "" {
 		return false
 	}

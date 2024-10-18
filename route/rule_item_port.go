@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -27,7 +28,7 @@ func NewPortItem(isSource bool, ports []uint16) *PortItem {
 	}
 }
 
-func (r *PortItem) Match(metadata *adapter.InboundContext) bool {
+func (r *PortItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	if r.isSource {
 		return r.portMap[metadata.Source.Port]
 	} else {

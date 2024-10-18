@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"net/netip"
 
 	"github.com/sagernet/sing-box/adapter"
@@ -262,16 +263,16 @@ func (r *DefaultDNSRule) WithAddressLimit() bool {
 	return false
 }
 
-func (r *DefaultDNSRule) Match(metadata *adapter.InboundContext) bool {
+func (r *DefaultDNSRule) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	metadata.IgnoreDestinationIPCIDRMatch = true
 	defer func() {
 		metadata.IgnoreDestinationIPCIDRMatch = false
 	}()
-	return r.abstractDefaultRule.Match(metadata)
+	return r.abstractDefaultRule.Match(ctx, metadata)
 }
 
-func (r *DefaultDNSRule) MatchAddressLimit(metadata *adapter.InboundContext) bool {
-	return r.abstractDefaultRule.Match(metadata)
+func (r *DefaultDNSRule) MatchAddressLimit(ctx context.Context, metadata *adapter.InboundContext) bool {
+	return r.abstractDefaultRule.Match(ctx, metadata)
 }
 
 var _ adapter.DNSRule = (*LogicalDNSRule)(nil)
@@ -340,30 +341,30 @@ func (r *LogicalDNSRule) WithAddressLimit() bool {
 	return false
 }
 
-func (r *LogicalDNSRule) Match(metadata *adapter.InboundContext) bool {
+func (r *LogicalDNSRule) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	if r.mode == C.LogicalTypeAnd {
 		return common.All(r.rules, func(it adapter.HeadlessRule) bool {
 			metadata.ResetRuleCache()
-			return it.(adapter.DNSRule).Match(metadata)
+			return it.(adapter.DNSRule).Match(ctx, metadata)
 		}) != r.invert
 	} else {
 		return common.Any(r.rules, func(it adapter.HeadlessRule) bool {
 			metadata.ResetRuleCache()
-			return it.(adapter.DNSRule).Match(metadata)
+			return it.(adapter.DNSRule).Match(ctx, metadata)
 		}) != r.invert
 	}
 }
 
-func (r *LogicalDNSRule) MatchAddressLimit(metadata *adapter.InboundContext) bool {
+func (r *LogicalDNSRule) MatchAddressLimit(ctx context.Context, metadata *adapter.InboundContext) bool {
 	if r.mode == C.LogicalTypeAnd {
 		return common.All(r.rules, func(it adapter.HeadlessRule) bool {
 			metadata.ResetRuleCache()
-			return it.(adapter.DNSRule).MatchAddressLimit(metadata)
+			return it.(adapter.DNSRule).MatchAddressLimit(ctx, metadata)
 		}) != r.invert
 	} else {
 		return common.Any(r.rules, func(it adapter.HeadlessRule) bool {
 			metadata.ResetRuleCache()
-			return it.(adapter.DNSRule).MatchAddressLimit(metadata)
+			return it.(adapter.DNSRule).MatchAddressLimit(ctx, metadata)
 		}) != r.invert
 	}
 }

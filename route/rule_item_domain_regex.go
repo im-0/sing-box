@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"regexp"
 	"strings"
 
@@ -37,7 +38,7 @@ func NewDomainRegexItem(expressions []string) (*DomainRegexItem, error) {
 	return &DomainRegexItem{matchers, description}, nil
 }
 
-func (r *DomainRegexItem) Match(metadata *adapter.InboundContext) bool {
+func (r *DomainRegexItem) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
 	var domainHost string
 	if metadata.Domain != "" {
 		domainHost = metadata.Domain

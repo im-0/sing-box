@@ -1,6 +1,8 @@
 package route
 
 import (
+	"context"
+
 	"github.com/sagernet/sing-box/adapter"
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/log"
@@ -38,7 +40,7 @@ type DefaultRule struct {
 }
 
 type RuleItem interface {
-	Match(metadata *adapter.InboundContext) bool
+	Match(ctx context.Context, metadata *adapter.InboundContext) bool
 	String() string
 }
 
