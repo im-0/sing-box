@@ -1151,6 +1151,10 @@ func (r *Router) match0(ctx context.Context, metadata *adapter.InboundContext, d
 	for i, rule := range r.rules {
 		metadata.ResetRuleCache()
 		if rule.Match(ctx, metadata) {
+			if metadata.DomainResolutionFailed {
+				break
+			}
+
 			detour := rule.Outbound()
 			r.logger.DebugContext(ctx, "match[", i, "] ", rule.String(), " => ", detour)
 			if outbound, loaded := r.Outbound(detour); loaded {

@@ -144,6 +144,7 @@ func (r HeadlessRule) IsValid() bool {
 }
 
 type DefaultHeadlessRule struct {
+	DomainStrategy   DomainStrategy         `json:"domain_strategy,omitempty"`
 	QueryType        Listable[DNSQueryType] `json:"query_type,omitempty"`
 	Network          Listable[string]       `json:"network,omitempty"`
 	Domain           Listable[string]       `json:"domain,omitempty"`

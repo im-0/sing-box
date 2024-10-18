@@ -7,6 +7,7 @@ import (
 
 	"github.com/sagernet/sing-box/common/process"
 	"github.com/sagernet/sing-box/option"
+	dns "github.com/sagernet/sing-dns"
 	M "github.com/sagernet/sing/common/metadata"
 	N "github.com/sagernet/sing/common/network"
 )
@@ -53,6 +54,12 @@ type InboundContext struct {
 	ProcessInfo          *process.Info
 	QueryType            uint16
 	FakeIP               bool
+
+	// rule domain strategy
+
+	DomainResolutionFailed   bool
+	InsideDomainStrategyRule bool
+	AppliedDomainStrategy    dns.DomainStrategy
 
 	// rule cache
 

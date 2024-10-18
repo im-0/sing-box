@@ -7,6 +7,7 @@ import (
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/log"
 	"github.com/sagernet/sing-box/option"
+	dns "github.com/sagernet/sing-dns"
 	E "github.com/sagernet/sing/common/exceptions"
 )
 
@@ -50,6 +51,9 @@ func NewDefaultRule(router adapter.Router, logger log.ContextLogger, options opt
 			invert:   options.Invert,
 			outbound: options.Outbound,
 		},
+	}
+	if dns.DomainStrategy(options.DomainStrategy) != dns.DomainStrategyAsIS {
+		rule.domainStrategy = NewRuleDomainStrategy(router, logger, dns.DomainStrategy(options.DomainStrategy))
 	}
 	if len(options.Inbound) > 0 {
 		item := NewInboundRule(options.Inbound)

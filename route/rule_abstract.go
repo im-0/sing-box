@@ -12,6 +12,7 @@ import (
 )
 
 type abstractDefaultRule struct {
+	domainStrategy          *RuleDomainStrategy
 	items                   []RuleItem
 	sourceAddressItems      []RuleItem
 	sourcePortItems         []RuleItem
@@ -65,6 +66,14 @@ func (r *abstractDefaultRule) UpdateGeosite() error {
 }
 
 func (r *abstractDefaultRule) Match(ctx context.Context, metadata *adapter.InboundContext) bool {
+	if r.domainStrategy != nil {
+		if !r.domainStrategy.Resolve(ctx, metadata) {
+			// Mandatory domain resolution failed => no match, stop processing and use default outbound.
+			metadata.DomainResolutionFailed = true
+			return true
+		}
+	}
+
 	if len(r.allItems) == 0 {
 		return true
 	}

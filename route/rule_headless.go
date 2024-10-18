@@ -5,6 +5,7 @@ import (
 	C "github.com/sagernet/sing-box/constant"
 	"github.com/sagernet/sing-box/log"
 	"github.com/sagernet/sing-box/option"
+	dns "github.com/sagernet/sing-dns"
 	E "github.com/sagernet/sing/common/exceptions"
 )
 
@@ -36,6 +37,11 @@ func NewDefaultHeadlessRule(router adapter.Router, logger log.ContextLogger, opt
 		abstractDefaultRule{
 			invert: options.Invert,
 		},
+	}
+	if dns.DomainStrategy(options.DomainStrategy) != dns.DomainStrategyAsIS {
+		if router != nil {
+			rule.domainStrategy = NewRuleDomainStrategy(router, logger, dns.DomainStrategy(options.DomainStrategy))
+		}
 	}
 	if len(options.Network) > 0 {
 		item := NewNetworkItem(options.Network)

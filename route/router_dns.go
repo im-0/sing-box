@@ -52,6 +52,10 @@ func (r *Router) matchDNS(ctx context.Context, allowFakeIP bool, index int, isAd
 			}
 			metadata.ResetRuleCache()
 			if rule.Match(ctx, metadata) {
+				if metadata.DomainResolutionFailed {
+					break
+				}
+
 				detour := rule.Outbound()
 				transport, loaded := r.transportMap[detour]
 				if !loaded {
